@@ -1,1 +1,4 @@
-export class Farmer {}
+export class Farmer {
+  name: string;
+  age: number;
+}

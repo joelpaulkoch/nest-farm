@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFarmerDto } from './dto/create-farmer.dto';
 import { UpdateFarmerDto } from './dto/update-farmer.dto';
+import { Farmer } from './entities/farmer.entity';
 
 @Injectable()
 export class FarmersService {
+  private readonly farmers: Map<number, Farmer> = new Map();
+  private lastId = 0;
+
   create(createFarmerDto: CreateFarmerDto) {
-    return 'This action adds a new farmer';
+    this.farmers.set(this.lastId, createFarmerDto);
+    this.lastId += 1;
   }
 
   findAll() {
-    return `This action returns all farmers`;
+    return this.farmers;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} farmer`;
+    return this.farmers.get(id);
   }
 
   update(id: number, updateFarmerDto: UpdateFarmerDto) {
-    return `This action updates a #${id} farmer`;
+    let farmer = this.findOne(id);
+    farmer.name = updateFarmerDto.name ?? farmer.name;
+    farmer.age = updateFarmerDto.age ?? farmer.age;
+
+    this.farmers[id] = farmer;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} farmer`;
+    this.farmers.delete(id);
   }
 }
