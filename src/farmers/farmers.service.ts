@@ -2,34 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { CreateFarmerDto } from './dto/create-farmer.dto';
 import { UpdateFarmerDto } from './dto/update-farmer.dto';
 import { Farmer } from './entities/farmer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class FarmersService {
-  private readonly farmers: Map<number, Farmer> = new Map();
-  private lastId = 0;
+  constructor(
+    @InjectRepository(Farmer)
+    private farmerRepository: Repository<Farmer>,
+  ) {}
 
-  create(createFarmerDto: CreateFarmerDto) {
-    this.farmers.set(this.lastId, createFarmerDto);
-    this.lastId += 1;
+  async create(createFarmerDto: CreateFarmerDto): Promise<void> {
+    await this.farmerRepository.insert(createFarmerDto);
   }
 
-  findAll() {
-    return this.farmers;
+  findAll(): Promise<Farmer[]> {
+    return this.farmerRepository.find();
   }
 
-  findOne(id: number) {
-    return this.farmers.get(id);
+  findOne(id: number): Promise<Farmer> {
+    return this.farmerRepository.findOneBy({ id });
   }
 
-  update(id: number, updateFarmerDto: UpdateFarmerDto) {
-    let farmer = this.findOne(id);
-    farmer.name = updateFarmerDto.name ?? farmer.name;
-    farmer.age = updateFarmerDto.age ?? farmer.age;
-
-    this.farmers[id] = farmer;
+  update(id: number, updateFarmerDto: UpdateFarmerDto): Promise<UpdateResult> {
+    return this.farmerRepository.update({ id }, updateFarmerDto);
   }
 
-  remove(id: number) {
-    this.farmers.delete(id);
+  async remove(id: number): Promise<void> {
+    await this.farmerRepository.delete(id);
   }
 }
