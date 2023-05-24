@@ -43,7 +43,7 @@ describe('FarmersService', () => {
 
   describe('findOne', () => {
     it('should return the farmer corresponding to the id which represents the order of creation', async () => {
-      let farmer: Farmer = { id: 0, name: 'Joel', age: 27 };
+      const farmer: Farmer = { id: 0, name: 'Joel', age: 27 };
       await service.create(farmer);
       expect(await service.findOne(0)).toBe(farmer);
     });
@@ -53,7 +53,7 @@ describe('FarmersService', () => {
     it('should update the age of a farmer', async () => {
       expect((await service.findAll()).length).toBe(0);
 
-      let farmer: Farmer = { id: 0, name: 'Joel', age: 27 };
+      const farmer: Farmer = { id: 0, name: 'Joel', age: 27 };
       await service.create(farmer);
       expect(await service.findOne(0)).toBe(farmer);
 
@@ -66,7 +66,7 @@ describe('FarmersService', () => {
     it('should remove farmer with given id', async () => {
       expect((await service.findAll()).length).toBe(0);
 
-      let farmer: Farmer = { id: 0, name: 'Joel', age: 27 };
+      const farmer: Farmer = { id: 0, name: 'Joel', age: 27 };
       await service.create(farmer);
       expect((await service.findAll()).length).toBe(1);
 
